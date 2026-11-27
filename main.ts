@@ -12,8 +12,9 @@ const dir = process.env.OUTPUT_DIR || '/output';
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'entry.txt'), line, 'utf8');
 // Read back and confirm what was written is exactly the line.
+// v2: also assert no trailing newline, which the entry gate forbids.
 const written = fs.readFileSync(path.join(dir, 'entry.txt'), 'utf8');
-if (written !== line) {
-  throw new Error(`Wrote ${[...written].length} chars, expected ${len}`);
+if (written !== line || written.endsWith('\n')) {
+  throw new Error(`Wrote ${[...written].length} chars, expected ${len} with no trailing newline`);
 }
 console.log(`Wrote pride line (${len} chars) to ${path.join(dir, 'entry.txt')}`);
